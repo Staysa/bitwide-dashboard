@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dataracity — Outreach Performance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Plus+Jakarta+Sans:wght@600;700;800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07090d;--s0:#0d1117;--s1:#111820;--s2:#162030;
+  --b1:#1a2535;--b2:#243348;
+  --blue:#4a90f5;--green:#22d9a0;--orange:#f5a040;--purple:#a07df5;
+  --yellow:#f5ce40;--red:#f55858;--teal:#40d9f5;
+  --amanda:#a07df5;--luke:#f5a040;
+  --txt:#d8e8f5;--dim:#7a98b5;--muted:#3d5570;
+  --ff-head:'Plus Jakarta Sans',sans-serif;
+  --ff-mono:'DM Mono',monospace;
+  --ff-body:'Outfit',sans-serif;
+}
+body{font-family:var(--ff-body);background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
+
+/* grid bg */
+body::before{content:'';position:fixed;inset:0;
+  background-image:radial-gradient(circle at 20% 20%,rgba(74,144,245,.04) 0%,transparent 60%),
+    radial-gradient(circle at 80% 80%,rgba(160,125,245,.04) 0%,transparent 60%),
+    linear-gradient(rgba(74,144,245,.012) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(74,144,245,.012) 1px,transparent 1px);
+  background-size:100% 100%,100% 100%,44px 44px,44px 44px;
+  pointer-events:none;z-index:0}
+
+/* ── header ── */
+header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(7,9,13,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--b1);
+  padding:0 28px;height:54px;
+  display:flex;align-items:center;gap:20px;
+}
+.logo{font-family:var(--ff-head);font-size:14px;font-weight:800;letter-spacing:2.5px;display:flex;align-items:center;gap:9px}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.hdr-mid{font-family:var(--ff-mono);font-size:10px;color:var(--muted);letter-spacing:.8px}
+.hdr-right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.chip{font-family:var(--ff-mono);font-size:9px;font-weight:500;padding:3px 9px;border-radius:4px;letter-spacing:.5px}
+
+/* ── tabs ── */
+nav{background:var(--s0);border-bottom:1px solid var(--b1);padding:0 28px;display:flex;gap:2px;overflow-x:auto}
+.tab{font-family:var(--ff-mono);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;
+  padding:11px 15px;border:none;background:none;color:var(--muted);cursor:pointer;
+  border-bottom:2px solid transparent;transition:color .2s,border-color .2s;
+  position:relative;top:1px;white-space:nowrap}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab:hover:not(.active){color:var(--dim)}
+
+/* ── sub-tabs (period filter) ── */
+.period-bar{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}
+.ptab{font-family:var(--ff-mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;
+  padding:5px 12px;border-radius:4px;border:1px solid var(--b1);
+  background:none;color:var(--muted);cursor:pointer;transition:all .15s}
+.ptab.active{background:var(--s2);border-color:var(--b2);color:var(--txt)}
+.ptab:hover:not(.active){border-color:var(--b2);color:var(--dim)}
+
+/* ── main ── */
+main{padding:24px 28px;position:relative;z-index:1}
+.pane{display:none;flex-direction:column;gap:16px}
+.pane.active{display:flex}
+
+/* ── panel ── */
+.panel{background:var(--s0);border:1px solid var(--b1);border-radius:12px;padding:20px 22px}
+.ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.pt{font-family:var(--ff-mono);font-size:9px;letter-spacing:1.8px;text-transform:uppercase;color:var(--dim)}
+.ps{font-family:var(--ff-mono);font-size:9px;color:var(--muted)}
+
+/* ── kpi strip ── */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px}
+.kpi{background:var(--s1);border:1px solid var(--b1);border-radius:10px;padding:15px 16px;position:relative;overflow:hidden;transition:border-color .2s}
+.kpi:hover{border-color:var(--b2)}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--acc,var(--blue))}
+.kl{font-family:var(--ff-mono);font-size:8.5px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.kv{font-family:var(--ff-head);font-size:24px;font-weight:800;line-height:1;color:var(--acc,var(--blue))}
+.ks{font-family:var(--ff-mono);font-size:9px;color:var(--muted);margin-top:4px}
+.trend{display:inline-flex;align-items:center;gap:3px;font-family:var(--ff-mono);font-size:9px;margin-top:3px}
+.trend.up{color:var(--green)}.trend.down{color:var(--red)}.trend.flat{color:var(--muted)}
+
+/* ── flex layout ── */
+.row{display:flex;gap:14px;flex-wrap:wrap}
+.col-2{flex:2;min-width:260px}.col-1{flex:1;min-width:180px}.col-15{flex:1.5;min-width:220px}
+
+/* ── SVG charts ── */
+.chart-svg-wrap{width:100%;overflow:visible}
+.tick-label{font-family:'DM Mono',monospace;font-size:8px;fill:#3d5570}
+.chart-line{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.chart-area{opacity:.12}
+.dot{r:3;cursor:pointer;transition:r .1s}
+.dot:hover{r:5}
+.gridline{stroke:#1a2535;stroke-width:1}
+.axis-line{stroke:#1a2535;stroke-width:1}
+
+/* ── bar chart ── */
+.bars-wrap{display:flex;flex-direction:column;gap:6px}
+.bar-row-out{display:flex;align-items:flex-end;gap:4px;height:80px}
+.bar-item{flex:1;position:relative;border-radius:3px 3px 0 0;min-height:3px;cursor:default;transition:opacity .15s}
+.bar-item:hover{opacity:.8}
+.bar-item:hover .btip{display:block}
+.btip{display:none;position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);
+  background:var(--s2);border:1px solid var(--b2);border-radius:5px;
+  padding:4px 8px;font-family:var(--ff-mono);font-size:9px;color:var(--txt);
+  white-space:nowrap;z-index:20;pointer-events:none}
+.bar-labels{display:flex;gap:4px;margin-top:4px}
+.bl{flex:1;font-family:var(--ff-mono);font-size:8px;color:var(--muted);text-align:center}
+.legend{display:flex;gap:14px;margin-top:10px;flex-wrap:wrap}
+.li{display:flex;align-items:center;gap:5px;font-family:var(--ff-mono);font-size:9px;color:var(--dim)}
+.ld{width:8px;height:8px;border-radius:2px}
+
+/* ── data table ── */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:10px}
+th{font-family:var(--ff-mono);font-size:8px;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--muted);padding:6px 9px;text-align:left;border-bottom:1px solid var(--b1)}
+td{padding:7px 9px;border-bottom:1px solid var(--b1);font-family:var(--ff-mono);font-size:9px;color:var(--txt)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--s1)}
+
+/* ── pill ── */
+.pill{display:inline-block;font-family:var(--ff-mono);font-size:8px;font-weight:500;
+  padding:2px 6px;border-radius:3px;letter-spacing:.5px}
+
+/* ── section label ── */
+.slabel{font-family:var(--ff-mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.slabel::after{content:'';flex:1;height:1px;background:var(--b1)}
+
+/* ── monthly summary cards ── */
+.mo-cards{display:flex;flex-direction:column;gap:8px}
+.mo-card{background:var(--s1);border:1px solid var(--b1);border-radius:8px;padding:11px 14px}
+.mo-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.mo-name{font-family:var(--ff-mono);font-size:9px;font-weight:500;color:var(--txt);letter-spacing:.5px}
+.mo-stats{display:flex;gap:12px;flex-wrap:wrap}
+.mo-stat{font-family:var(--ff-mono);font-size:9px;color:var(--muted)}
+.mo-stat span{color:var(--txt)}
+
+/* ── h2h ── */
+.h2h-item{margin-bottom:12px}
+.h2h-lbl{display:flex;justify-content:space-between;font-family:var(--ff-mono);font-size:9px;margin-bottom:4px}
+.h2h-track{display:flex;height:6px;border-radius:3px;overflow:hidden;background:var(--s1)}
+
+/* ── sparkline in table ── */
+.spark{display:inline-block;vertical-align:middle}
+
+/* ── stat row ── */
+.sr{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--b1);font-size:11px}
+.sr:last-child{border-bottom:none}
+.sr-l{font-family:var(--ff-mono);font-size:9px;color:var(--muted);letter-spacing:.3px}
+.sr-v{font-weight:600}
+
+/* ── channel dot ── */
+.cdot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:5px}
+
+/* responsive */
+@media(max-width:700px){
+  main,header,nav{padding-left:14px;padding-right:14px}
+  .row{flex-direction:column}
+  .kpi-row{grid-template-columns:repeat(2,1fr)}
+}
+
+/* animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.panel{animation:fadeUp .3s ease}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><div class="pulse"></div>DATARACITY</div>
+  <span class="hdr-mid">OUTREACH PERFORMANCE · SEP 2025 – MAR 2026</span>
+  <div class="hdr-right">
+    <span class="chip" style="background:#16102a;color:#a07df5">🟣 Amanda</span>
+    <span class="chip" style="background:#1a1208;color:#f5a040">🟠 Luke</span>
+    <span class="chip" style="background:#0d1117;color:#3d5570;border:1px solid #1a2535">6 months · 103 weekly records</span>
+  </div>
+</header>
+
+<nav>
+  <button class="tab active" onclick="showTab('overview')">⬡ Overview</button>
+  <button class="tab" onclick="showTab('amanda')">🟣 Amanda</button>
+  <button class="tab" onclick="showTab('luke')">🟠 Luke</button>
+  <button class="tab" onclick="showTab('combined')">⚪ Combined</button>
+  <button class="tab" onclick="showTab('trends')">↗ Trends</button>
+  <button class="tab" onclick="showTab('channels')">⇄ Channels</button>
+  <button class="tab" onclick="showTab('records')">≡ Records</button>
+</nav>
+
+<main>
+  <div class="pane active" id="pane-overview"></div>
+  <div class="pane" id="pane-amanda"></div>
+  <div class="pane" id="pane-luke"></div>
+  <div class="pane" id="pane-combined"></div>
+  <div class="pane" id="pane-trends"></div>
+  <div class="pane" id="pane-channels"></div>
+  <div class="pane" id="pane-records"></div>
+</main>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════════════════════════════
+const RAW = [
+  // ── AMANDA ──────────────────────────────────────────────────────────
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-09-01",out:110,res:6,rr:54.5,or:null,dr:null,cl:null,mt:1},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-09-29",out:312,res:0,rr:0,or:4.17,dr:99.0,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-09-08",out:176,res:6,rr:16.2,or:null,dr:null,cl:null,mt:1},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-09-15",out:100,res:1,rr:7.7,or:null,dr:null,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-09-22",out:153,res:7,rr:19.4,or:null,dr:null,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-09-29",out:105,res:3,rr:21.4,or:null,dr:null,cl:null,mt:2},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"SUMMARY",w:null,       out:644,res:23,rr:20.7,or:null,dr:null,cl:null,mt:4,mo:"2025-09",title:"LinkedIn Sep 2025"},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"SUMMARY",w:null,       out:1349,res:0,rr:0,or:null,dr:null,cl:null,mt:0,mo:"2025-09",title:"Email Sep 2025"},
+
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-10-06",out:392,res:0,rr:0,or:1.29,dr:99.2,cl:null,mt:1},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-10-06",out:92,res:6,rr:19.4,or:null,dr:null,cl:null,mt:0},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-10-13",out:543,res:0,rr:0,or:13.2,dr:98.7,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-10-13",out:126,res:8,rr:20.5,or:null,dr:null,cl:null,mt:1},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-10-20",out:636,res:0,rr:0,or:7.09,dr:98.5,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-10-20",out:113,res:11,rr:39.3,or:null,dr:null,cl:null,mt:0},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-10-27",out:478,res:2,rr:0.4,or:7.11,dr:98.8,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-10-27",out:126,res:5,rr:50.0,or:null,dr:null,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"SUMMARY",w:null,       out:457,res:30,rr:27.8,or:null,dr:null,cl:null,mt:1,mo:"2025-10",title:"LinkedIn Oct 2025"},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"SUMMARY",w:null,       out:2049,res:2,rr:0.1,or:null,dr:null,cl:null,mt:1,mo:"2025-10",title:"Email Oct 2025"},
+
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-11-03",out:385,res:1,rr:1.14,or:23.1,dr:98.9,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-11-03",out:91,res:7,rr:25.9,or:null,dr:null,cl:null,mt:0},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-11-10",out:342,res:2,rr:8.0,or:7.31,dr:99.1,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-11-10",out:106,res:6,rr:31.6,or:null,dr:null,cl:null,mt:1},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-11-17",out:316,res:0,rr:0,or:10.4,dr:99.0,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-11-17",out:153,res:32,rr:39.5,or:null,dr:null,cl:null,mt:2},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-11-24",out:269,res:0,rr:0,or:13.1,dr:99.3,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-11-24",out:142,res:2,rr:6.1,or:null,dr:null,cl:null,mt:1},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"SUMMARY",w:null,       out:1312,res:3,rr:1.66,or:null,dr:null,cl:null,mt:0,mo:"2025-11",title:"Email Nov 2025"},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"SUMMARY",w:null,       out:492,res:47,rr:null,or:null,dr:null,cl:null,mt:4,mo:"2025-11",title:"LinkedIn Nov 2025"},
+
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-12-01",out:343,res:0,rr:0,or:14.0,dr:99.1,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-12-01",out:103,res:3,rr:18.75,or:null,dr:null,cl:null,mt:0},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-12-08",out:424,res:0,rr:0,or:11.6,dr:99.0,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-12-08",out:58,res:2,rr:28.6,or:null,dr:null,cl:null,mt:1},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-12-15",out:446,res:0,rr:0,or:13.0,dr:99.2,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-12-15",out:113,res:7,rr:26.9,or:null,dr:null,cl:null,mt:0},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-12-22",out:375,res:2,rr:3.28,or:16.6,dr:98.7,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-12-22",out:99,res:2,rr:22.2,or:null,dr:null,cl:null,mt:1},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-12-29",out:400,res:0,rr:0,or:12.0,dr:99.0,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-12-29",out:38,res:1,rr:20.0,or:null,dr:null,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"SUMMARY",w:null,       out:373,res:14,rr:24.1,or:null,dr:null,cl:null,mt:2,mo:"2025-12",title:"LinkedIn Dec 2025"},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"SUMMARY",w:null,       out:1588,res:2,rr:0.93,or:null,dr:null,cl:null,mt:0,mo:"2025-12",title:"Email Dec 2025"},
+
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2026-01-05",out:568,res:0,rr:0,or:2.82,dr:100,cl:12,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2026-01-05",out:60,res:1,rr:6.67,or:null,dr:null,cl:null,mt:0},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2026-01-12",out:229,res:0,rr:0,or:6.11,dr:100,cl:5,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2026-01-12",out:96,res:4,rr:28.6,or:null,dr:null,cl:null,mt:0},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2026-01-19",out:254,res:0,rr:0,or:4.74,dr:99.6,cl:10,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2026-01-19",out:113,res:3,rr:25.0,or:null,dr:null,cl:null,mt:0},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2026-01-26",out:415,res:1,rr:9.09,or:2.7,dr:98.3,cl:6,mt:0},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2026-01-26",out:131,res:0,rr:0,or:4.76,dr:96.2,cl:3,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2026-01-26",out:114,res:4,rr:19.05,or:null,dr:null,cl:null,mt:3},
+  {s:"Amanda",c:"LinkedIn",v:"DEFAULT",t:"SUMMARY",w:null,       out:383,res:12,rr:19.4,or:null,dr:null,cl:null,mt:3,mo:"2026-01",title:"LinkedIn Jan 2026"},
+  {s:"Amanda",c:"Email",   v:"DEFAULT",t:"SUMMARY",w:null,       out:1597,res:1,rr:1.69,or:null,dr:null,cl:36,mt:0,mo:"2026-01",title:"Email Jan 2026"},
+
+  {s:"Amanda",c:"LinkedIn",v:"OLD",    t:"WEEKLY",w:"2026-02-02",out:92,res:2,rr:14.3,or:null,dr:null,cl:null,mt:1},
+  {s:"Amanda",c:"Email",   v:"OLD",    t:"WEEKLY",w:"2026-02-02",out:340,res:0,rr:0,or:1.48,dr:99.4,cl:4,mt:0},
+  {s:"Amanda",c:"Email",   v:"NEW",    t:"WEEKLY",w:"2026-02-02",out:153,res:0,rr:0,or:4.67,dr:98.0,cl:3,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"OLD",    t:"WEEKLY",w:"2026-02-09",out:3,res:0,rr:0,or:null,dr:null,cl:null,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"NEW",    t:"WEEKLY",w:"2026-02-09",out:98,res:0,rr:0,or:null,dr:null,cl:null,mt:1},
+  {s:"Amanda",c:"Email",   v:"OLD",    t:"WEEKLY",w:"2026-02-09",out:201,res:0,rr:0,or:3.48,dr:100,cl:7,mt:0},
+  {s:"Amanda",c:"Email",   v:"NEW",    t:"WEEKLY",w:"2026-02-09",out:190,res:1,rr:20.0,or:2.66,dr:98.9,cl:4,mt:0},
+  {s:"Amanda",c:"LinkedIn",v:"OLD",    t:"SUMMARY",w:null,       out:95,res:2,rr:13.3,or:null,dr:null,cl:null,mt:1,mo:"2026-02",title:"LinkedIn Feb 2026 (OLD)"},
+  {s:"Amanda",c:"LinkedIn",v:"NEW",    t:"SUMMARY",w:null,       out:98,res:0,rr:0,or:null,dr:null,cl:null,mt:1,mo:"2026-02",title:"LinkedIn Feb 2026 (NEW)"},
+  {s:"Amanda",c:"Email",   v:"OLD",    t:"SUMMARY",w:null,       out:541,res:0,rr:0,or:2.23,dr:99.6,cl:11,mt:0,mo:"2026-02",title:"Email Feb 2026 (OLD)"},
+  {s:"Amanda",c:"Email",   v:"NEW",    t:"SUMMARY",w:null,       out:343,res:1,rr:8.33,or:3.55,dr:98.5,cl:7,mt:0,mo:"2026-02",title:"Email Feb 2026 (NEW)"},
+
+  // ── LUKE ────────────────────────────────────────────────────────────
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-09-01",out:98,res:7,rr:41.2,or:null,dr:null,cl:null,mt:3},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-09-29",out:495,res:0,rr:0,or:0,dr:99.1,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-09-08",out:197,res:2,rr:8.7,or:null,dr:null,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-09-15",out:146,res:3,rr:8.1,or:null,dr:null,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-09-22",out:48,res:2,rr:25.0,or:null,dr:null,cl:null,mt:1},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-09-29",out:183,res:3,rr:12.5,or:null,dr:null,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"SUMMARY",w:null,       out:672,res:17,rr:15.6,or:null,dr:null,cl:null,mt:4,mo:"2025-09",title:"LinkedIn Sep 2025"},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"SUMMARY",w:null,       out:1102,res:2,rr:0,or:null,dr:null,cl:null,mt:0,mo:"2025-09",title:"Email Sep 2025"},
+
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-10-06",out:509,res:0,rr:0,or:0,dr:99.2,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-10-06",out:153,res:9,rr:42.9,or:null,dr:null,cl:null,mt:0},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-10-13",out:316,res:2,rr:100,or:0.63,dr:98.7,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-10-13",out:97,res:7,rr:100,or:null,dr:null,cl:null,mt:0},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-10-20",out:668,res:0,rr:0,or:0,dr:99.0,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-10-20",out:117,res:9,rr:75.0,or:null,dr:null,cl:null,mt:0},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-10-27",out:236,res:0,rr:0,or:0.42,dr:99.1,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-10-27",out:112,res:6,rr:27.3,or:null,dr:null,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"SUMMARY",w:null,       out:479,res:31,rr:50.8,or:null,dr:null,cl:null,mt:0,mo:"2025-10",title:"LinkedIn Oct 2025"},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"SUMMARY",w:null,       out:1729,res:2,rr:0,or:null,dr:null,cl:null,mt:0,mo:"2025-10",title:"Email Oct 2025"},
+
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-11-03",out:385,res:1,rr:1.14,or:23.1,dr:99.0,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-11-03",out:121,res:4,rr:12.9,or:null,dr:null,cl:null,mt:2},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-11-10",out:351,res:1,rr:2.7,or:10.5,dr:99.1,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-11-10",out:112,res:4,rr:25.0,or:null,dr:null,cl:null,mt:2},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-11-17",out:244,res:0,rr:0,or:9.02,dr:99.2,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-11-17",out:143,res:13,rr:59.1,or:null,dr:null,cl:null,mt:5},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-11-24",out:228,res:0,rr:0,or:7.89,dr:99.0,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-11-24",out:110,res:2,rr:11.1,or:null,dr:null,cl:null,mt:2},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"SUMMARY",w:null,       out:486,res:23,rr:26.4,or:null,dr:null,cl:null,mt:11,mo:"2025-11",title:"LinkedIn Nov 2025"},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"SUMMARY",w:null,       out:1208,res:2,rr:1.21,or:null,dr:null,cl:null,mt:0,mo:"2025-11",title:"Email Nov 2025"},
+
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-12-01",out:419,res:0,rr:0,or:13.5,dr:99.3,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-12-01",out:116,res:3,rr:18.75,or:null,dr:null,cl:null,mt:0},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-12-08",out:437,res:0,rr:0,or:8.94,dr:99.0,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-12-08",out:76,res:3,rr:12.5,or:null,dr:null,cl:null,mt:0},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-12-15",out:425,res:0,rr:0,or:6.82,dr:98.8,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-12-15",out:109,res:3,rr:14.3,or:null,dr:null,cl:null,mt:0},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-12-22",out:342,res:0,rr:0,or:14.1,dr:99.1,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2025-12-22",out:101,res:2,rr:18.2,or:null,dr:null,cl:null,mt:0},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2025-12-29",out:390,res:0,rr:0,or:10.4,dr:99.0,cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"SUMMARY",w:null,       out:402,res:11,rr:15.3,or:null,dr:null,cl:null,mt:0,mo:"2025-12",title:"LinkedIn Dec 2025"},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"SUMMARY",w:null,       out:1623,res:0,rr:0,or:null,dr:null,cl:null,mt:0,mo:"2025-12",title:"Email Dec 2025"},
+
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2026-01-05",out:456,res:0,rr:0,or:2.2,dr:99.8,cl:8,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2026-01-05",out:75,res:2,rr:13.3,or:null,dr:null,cl:null,mt:0},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2026-01-12",out:310,res:0,rr:0,or:8.7,dr:96.5,cl:15,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2026-01-12",out:100,res:6,rr:30.0,or:null,dr:null,cl:null,mt:0},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2026-01-19",out:300,res:0,rr:0,or:8.03,dr:99.7,cl:21,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2026-01-19",out:107,res:3,rr:10.3,or:null,dr:null,cl:null,mt:0},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2026-01-26",out:350,res:2,rr:11.1,or:5.17,dr:99.4,cl:11,mt:0},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"WEEKLY",w:"2026-01-26",out:128,res:0,rr:0,or:3.97,dr:98.4,cl:2,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"WEEKLY",w:"2026-01-26",out:125,res:4,rr:15.4,or:null,dr:null,cl:null,mt:1},
+  {s:"Luke",  c:"LinkedIn",v:"DEFAULT",t:"SUMMARY",w:null,       out:407,res:15,rr:16.7,or:null,dr:null,cl:null,mt:1,mo:"2026-01",title:"LinkedIn Jan 2026"},
+  {s:"Luke",  c:"Email",   v:"DEFAULT",t:"SUMMARY",w:null,       out:1416,res:2,rr:2.56,or:null,dr:null,cl:55,mt:0,mo:"2026-01",title:"Email Jan 2026"},
+
+  {s:"Luke",  c:"LinkedIn",v:"OLD",    t:"WEEKLY",w:"2026-02-02",out:89, res:0,rr:0,   or:null,dr:null, cl:null,mt:0},
+  {s:"Luke",  c:"Email",   v:"OLD",    t:"WEEKLY",w:"2026-02-02",out:198,res:0,rr:0,   or:4.62,dr:98.48,cl:6,  mt:0},
+  {s:"Luke",  c:"Email",   v:"NEW",    t:"WEEKLY",w:"2026-02-02",out:148,res:2,rr:40.0,or:3.47,dr:97.30,cl:3,  mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"OLD",    t:"WEEKLY",w:"2026-02-09",out:68, res:4,rr:28.6,or:null,dr:null, cl:null,mt:1},
+  {s:"Luke",  c:"LinkedIn",v:"NEW",    t:"WEEKLY",w:"2026-02-09",out:82, res:1,rr:12.5,or:null,dr:null, cl:null,mt:0},
+  {s:"Luke",  c:"Email",   v:"OLD",    t:"WEEKLY",w:"2026-02-09",out:134,res:0,rr:0,   or:4.48,dr:100,  cl:3,  mt:0},
+  {s:"Luke",  c:"Email",   v:"NEW",    t:"WEEKLY",w:"2026-02-09",out:176,res:1,rr:16.7,or:3.41,dr:100,  cl:4,  mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"OLD",    t:"WEEKLY",w:"2026-02-16",out:20, res:2,rr:18.2,or:null,dr:null, cl:null,mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"NEW",    t:"WEEKLY",w:"2026-02-16",out:99, res:3,rr:21.4,or:null,dr:null, cl:null,mt:0},
+  {s:"Luke",  c:"Email",   v:"OLD",    t:"WEEKLY",w:"2026-02-16",out:148,res:0,rr:0,   or:3.42,dr:98.65,cl:2,  mt:0},
+  {s:"Luke",  c:"Email",   v:"NEW",    t:"WEEKLY",w:"2026-02-16",out:246,res:0,rr:0,   or:2.08,dr:97.56,cl:3,  mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"NEW",    t:"WEEKLY",w:"2026-02-23",out:89, res:3,rr:25.0,or:null,dr:null, cl:null,mt:0},
+  {s:"Luke",  c:"Email",   v:"NEW",    t:"WEEKLY",w:"2026-02-23",out:218,res:2,rr:40.0,or:2.38,dr:96.33,cl:3,  mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"OLD",    t:"SUMMARY",w:null,out:177,res:6, rr:16.2,or:null,dr:null,   cl:null,mt:1,mo:"2026-02",title:"LinkedIn Feb 2026 (OLD)"},
+  {s:"Luke",  c:"LinkedIn",v:"NEW",    t:"SUMMARY",w:null,out:181,res:4, rr:18.2,or:null,dr:null,   cl:null,mt:0,mo:"2026-02",title:"LinkedIn Feb 2026 (NEW)"},
+  {s:"Luke",  c:"Email",   v:"OLD",    t:"SUMMARY",w:null,out:480,res:0, rr:0,   or:4.21,dr:98.96,  cl:11,  mt:0,mo:"2026-02",title:"Email Feb 2026 (OLD)"},
+  {s:"Luke",  c:"Email",   v:"NEW",    t:"SUMMARY",w:null,out:788,res:5, rr:23.8,or:2.73,dr:97.72,  cl:13,  mt:0,mo:"2026-02",title:"Email Feb 2026 (NEW)"},
+
+  {s:"Luke",  c:"LinkedIn",v:"NEW",    t:"WEEKLY", w:"2026-03-02",out:122,res:2,rr:10.5,or:null,dr:null, cl:null,mt:0},
+  {s:"Luke",  c:"Email",   v:"NEW",    t:"WEEKLY", w:"2026-03-02",out:233,res:0,rr:0,   or:3.91,dr:98.71,cl:8,  mt:0},
+  {s:"Luke",  c:"LinkedIn",v:"NEW",    t:"SUMMARY",w:null,out:122,res:2, rr:10.5,or:null,dr:null,   cl:null,mt:0,mo:"2026-03",title:"LinkedIn Mar 2026 (NEW)"},
+  {s:"Luke",  c:"Email",   v:"NEW",    t:"SUMMARY",w:null,out:233,res:0, rr:0,   or:3.91,dr:98.71,  cl:8,   mt:0,mo:"2026-03",title:"Email Mar 2026 (NEW)"},
+];
+
+const MONTHS_ORDER = ["2025-09","2025-10","2025-11","2025-12","2026-01","2026-02","2026-03"];
+const MONTH_LABELS = {"2025-09":"Sep '25","2025-10":"Oct '25","2025-11":"Nov '25","2025-12":"Dec '25","2026-01":"Jan '26","2026-02":"Feb '26","2026-03":"Mar '26"};
+
+// ═══════════════════════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════════════════════
+const W  = r => r.filter(x => x.t==="WEEKLY");
+const S  = r => r.filter(x => x.t==="SUMMARY");
+const bySub = (r,s) => r.filter(x => x.s===s);
+const byCh  = (r,c) => r.filter(x => x.c===c);
+const byMo  = (r,m) => r.filter(x => x.w && x.w.startsWith(m));
+const sumF  = (r,k) => r.reduce((a,x)=>(a+(x[k]||0)),0);
+const avgF  = (r,k) => { const v=r.filter(x=>x[k]!=null&&!isNaN(x[k])&&x[k]<=100); return v.length?+(v.reduce((a,x)=>a+x[k],0)/v.length).toFixed(1):null; };
+const f     = (v,s='') => v==null?'—':`${typeof v==='number'?v.toLocaleString(undefined,{maximumFractionDigits:1}):v}${s}`;
+const cap   = v => v==null?null:Math.min(v,100);
+const wkMo  = w => w?w.slice(0,7):null;
+
+function pill(l,c,b){return `<span class="pill" style="background:${b};color:${c}">${l}</span>`}
+function varPill(v){const m={OLD:['#a07df5','#18102a'],NEW:['#22d9a0','#0e2018'],DEFAULT:['#3d5570','#0d1117']};const[c,b]=m[v]||m.DEFAULT;return pill(v,c,b)}
+function typePill(t){return t==='SUMMARY'?pill('SUMM','#f5ce40','#1a1400'):pill('WK','#3d5570','#0d1117')}
+
+function trendArrow(vals) {
+  const valid = vals.filter(v=>v!=null&&!isNaN(v));
+  if(valid.length<2) return '';
+  const last=valid[valid.length-1], prev=valid[valid.length-2];
+  const d=last-prev, pct=prev?((d/prev)*100).toFixed(1):0;
+  if(Math.abs(d)<0.1) return `<span class="trend flat">→ flat</span>`;
+  const up=d>0;
+  return `<span class="trend ${up?'up':'down'}">${up?'↑':'↓'} ${Math.abs(pct)}%</span>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+//  CHART BUILDERS
+// ═══════════════════════════════════════════════════════════════════════
+function barChart(data, colors, labels) {
+  const max=Math.max(...data.map(d=>Math.max(...d.vals.filter(v=>v!=null))),1);
+  const bars=data.map(d=>{
+    const bs=d.vals.map((v,i)=>{
+      const h=Math.max(2,(v||0)/max*76);
+      return `<div class="bar-item" style="height:${h}px;background:${colors[i]};opacity:.85" title="${labels[i]}: ${f(v)}"><div class="btip">${labels[i]}: ${f(v)}</div></div>`;
+    }).join('');
+    return `<div class="bar-group" style="flex:1;display:flex;gap:2px;align-items:flex-end">${bs}</div>`;
+  }).join('');
+  const lbls=data.map(d=>`<div class="bl">${d.label}</div>`).join('');
+  const leg=colors.map((c,i)=>`<div class="li"><div class="ld" style="background:${c}"></div>${labels[i]}</div>`).join('');
+  return `<div class="bars-wrap">
+    <div class="bar-row-out">${bars}</div>
+    <div class="bar-labels">${lbls}</div>
+    <div class="legend">${leg}</div>
+  </div>`;
+}
+
+function svgLineChart(series, w=600, h=100) {
+  if(!series.length||!series[0].pts.length) return '';
+  const n=series[0].pts.length;
+  const allVals=series.flatMap(s=>s.pts.map(p=>p.v)).filter(v=>v!=null);
+  if(!allVals.length) return '';
+  const minV=0, maxV=Math.max(...allVals)*1.15||1;
+  const pad={l:8,r:8,t:8,b:20};
+  const cw=w-pad.l-pad.r, ch=h-pad.t-pad.b;
+  const px=i=>(pad.l+i/(n-1||1)*cw).toFixed(1);
+  const py=v=>(pad.t+ch-(v-minV)/(maxV-minV)*ch).toFixed(1);
+
+  let svg=`<svg viewBox="0 0 ${w} ${h}" class="chart-svg-wrap" style="width:100%;height:${h}px">`;
+
+  // gridlines
+  [0,.25,.5,.75,1].forEach(pct=>{
+    const y=pad.t+ch*(1-pct);
+    svg+=`<line x1="${pad.l}" y1="${y.toFixed(1)}" x2="${w-pad.r}" y2="${y.toFixed(1)}" class="gridline"/>`;
+    if(pct>0) svg+=`<text x="${pad.l}" y="${(y-2).toFixed(1)}" class="tick-label">${Math.round(minV+(maxV-minV)*pct)}</text>`;
+  });
+
+  // x labels
+  series[0].pts.forEach((p,i)=>{
+    svg+=`<text x="${px(i)}" y="${h-3}" class="tick-label" text-anchor="middle">${p.label}</text>`;
+  });
+
+  // series
+  series.forEach(sr=>{
+    const validPts=sr.pts.filter(p=>p.v!=null);
+    if(validPts.length<2) return;
+    const path=validPts.map((p,i)=>`${i?'L':'M'}${px(sr.pts.indexOf(p))},${py(p.v)}`).join(' ');
+    const area=`${path} L${px(sr.pts.indexOf(validPts[validPts.length-1]))},${py(0)} L${px(sr.pts.indexOf(validPts[0]))},${py(0)} Z`;
+    svg+=`<path d="${area}" fill="${sr.color}" class="chart-area"/>`;
+    svg+=`<path d="${path}" stroke="${sr.color}" class="chart-line"/>`;
+    validPts.forEach(p=>{
+      svg+=`<circle cx="${px(sr.pts.indexOf(p))}" cy="${py(p.v)}" r="3" fill="${sr.color}" class="dot"><title>${sr.label}: ${f(p.v)}</title></circle>`;
+    });
+  });
+
+  svg+='</svg>';
+  return svg;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+//  MONTHLY AGGREGATION
+// ═══════════════════════════════════════════════════════════════════════
+function monthlyStats(records, sub) {
+  const recs=sub?bySub(records,sub):records;
+  return MONTHS_ORDER.map(mo=>{
+    const wr=W(recs).filter(r=>r.w&&r.w.startsWith(mo));
+    const li=byCh(wr,'LinkedIn'), em=byCh(wr,'Email');
+    return {
+      mo, label:MONTH_LABELS[mo],
+      liOut:sumF(li,'out'), emOut:sumF(em,'out'),
+      totalOut:sumF(wr,'out'),
+      liRes:sumF(li,'res'), emRes:sumF(em,'res'),
+      totalRes:sumF(wr,'res'),
+      liRR:cap(avgF(li,'rr')), emOR:avgF(em,'or'),
+      emDR:avgF(em,'dr'),
+      emRR:avgF(em,'rr'),
+      emCl:sumF(em,'cl'),
+      totalMt:sumF(wr,'mt'),
+      weeks:wr.length,
+    };
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+//  KPI CARD
+// ═══════════════════════════════════════════════════════════════════════
+function kpiCard(label,value,suffix,color,sub='',trend='') {
+  return `<div class="kpi" style="--acc:${color}">
+    <div class="kl">${label}</div>
+    <div class="kv">${f(value)}${suffix}</div>
+    ${sub?`<div class="ks">${sub}</div>`:''}
+    ${trend}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+//  OVERVIEW TAB
+// ═══════════════════════════════════════════════════════════════════════
+function buildOverview() {
+  const wAll=W(RAW);
+  const amW=bySub(wAll,'Amanda'), luW=bySub(wAll,'Luke');
+  const amMo=monthlyStats(RAW,'Amanda'), luMo=monthlyStats(RAW,'Luke');
+
+  const liOut=sumF(byCh(wAll,'LinkedIn'),'out'), emOut=sumF(byCh(wAll,'Email'),'out');
+  const totalOut=sumF(wAll,'out'), totalRes=sumF(wAll,'res'), totalMt=sumF(wAll,'mt');
+  const avgRR=cap(avgF(byCh(wAll,'LinkedIn'),'rr'));
+  const avgOR=avgF(byCh(wAll,'Email'),'or');
+
+  const kpis=`<div class="kpi-row">
+    ${kpiCard('Total Outreach',totalOut,'','#4a90f5',`🔗 ${liOut.toLocaleString()} LI · 📧 ${emOut.toLocaleString()} Email`)}
+    ${kpiCard('Total Responses',totalRes,'','#22d9a0',`${f(avgRR,'% avg LI resp rate')}`)}
+    ${kpiCard('Meetings Sent',totalMt,'','#f5a040')}
+    ${kpiCard('Avg Email Open Rate',avgOR,'%','#a07df5','6-month avg')}
+    ${kpiCard('Weeks Tracked',[...new Set(wAll.filter(r=>r.w).map(r=>r.w))].length,'','#3d5570')}
+    ${kpiCard('Period','Sep–Mar','','#3d5570','7 months of data')}
+  </div>`;
+
+  // monthly outreach chart — stacked Amanda + Luke
+  const moBarData=MONTHS_ORDER.map((mo,i)=>({
+    label:MONTH_LABELS[mo],
+    vals:[
+      amMo[i].totalOut,
+      luMo[i].totalOut,
+    ]
+  }));
+
+  // monthly responses
+  const moResData=MONTHS_ORDER.map((mo,i)=>({
+    label:MONTH_LABELS[mo],
+    vals:[amMo[i].totalRes, luMo[i].totalRes]
+  }));
+
+  // trends: LI response rate per month
+  const liRRtrend={
+    amanda: amMo.map(m=>({label:m.label,v:m.liRR})),
+    luke:   luMo.map(m=>({label:m.label,v:m.liRR})),
+  };
+  const orTrend={
+    amanda: amMo.map(m=>({label:m.label,v:m.emOR})),
+    luke:   luMo.map(m=>({label:m.label,v:m.emOR})),
+  };
+
+  // monthly summary table
+  const tableRows=MONTHS_ORDER.map((mo,i)=>{
+    const am=amMo[i], lu=luMo[i];
+    const tot=am.totalOut+lu.totalOut, res=am.totalRes+lu.totalRes;
+    const prev=i>0?amMo[i-1].totalOut+luMo[i-1].totalOut:null;
+    const chg=prev?(((tot-prev)/prev)*100).toFixed(0):null;
+    const chgEl=chg!=null?`<span style="color:${chg>=0?'#22d9a0':'#f55858'};font-size:9px"> ${chg>=0?'↑':'↓'}${Math.abs(chg)}%</span>`:'';
+    return `<tr>
+      <td style="font-weight:600;color:#7a98b5">${MONTH_LABELS[mo]}</td>
+      <td>${tot.toLocaleString()}${chgEl}</td>
+      <td style="color:#a07df5">${am.totalOut.toLocaleString()}</td>
+      <td style="color:#f5a040">${lu.totalOut.toLocaleString()}</td>
+      <td style="color:#22d9a0">${res}</td>
+      <td style="color:#4a90f5">${f(am.liRR,'%')} / ${f(lu.liRR,'%')}</td>
+      <td style="color:#f5ce40">${(am.totalMt+lu.totalMt)||'—'}</td>
+    </tr>`;
+  }).join('');
+
+  return `
+    ${kpis}
+    <div class="row">
+      <div class="panel col-2">
+        <div class="ph"><span class="pt">Monthly Outreach Volume</span><span class="ps">Amanda + Luke weekly</span></div>
+        ${barChart(moBarData,['#a07df5','#f5a040'],['Amanda','Luke'])}
+      </div>
+      <div class="panel col-1">
+        <div class="ph"><span class="pt">Monthly Responses</span></div>
+        ${barChart(moResData,['#a07df5','#f5a040'],['Amanda','Luke'])}
+      </div>
+    </div>
+    <div class="row">
+      <div class="panel col-1">
+        <div class="ph"><span class="pt">LinkedIn Response Rate Trend</span><span class="ps">monthly avg % · capped at 100</span></div>
+        ${svgLineChart([
+          {label:'Amanda',color:'#a07df5',pts:liRRtrend.amanda},
+          {label:'Luke',  color:'#f5a040',pts:liRRtrend.luke},
+        ],400,90)}
+        <div class="legend" style="margin-top:8px">
+          <div class="li"><div class="ld" style="background:#a07df5"></div>Amanda</div>
+          <div class="li"><div class="ld" style="background:#f5a040"></div>Luke</div>
+        </div>
+      </div>
+      <div class="panel col-1">
+        <div class="ph"><span class="pt">Email Open Rate Trend</span><span class="ps">monthly avg %</span></div>
+        ${svgLineChart([
+          {label:'Amanda',color:'#a07df5',pts:orTrend.amanda},
+          {label:'Luke',  color:'#f5a040',pts:orTrend.luke},
+        ],400,90)}
+        <div class="legend" style="margin-top:8px">
+          <div class="li"><div class="ld" style="background:#a07df5"></div>Amanda</div>
+          <div class="li"><div class="ld" style="background:#f5a040"></div>Luke</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><span class="pt">Monthly Performance Summary</span><span class="ps">all channels combined</span></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Month</th><th>Total Outreach</th><th>Amanda</th><th>Luke</th><th>Responses</th><th>LI Resp% (A/L)</th><th>Meetings</th></tr></thead>
+        <tbody>${tableRows}</tbody>
+      </table></div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+//  SUBCLIENT TAB
+// ═══════════════════════════════════════════════════════════════════════
+function buildSubclient(sub, color) {
+  const recs=bySub(RAW,sub);
+  const w=W(recs), mo=monthlyStats(recs);
+  const li=byCh(w,'LinkedIn'), em=byCh(w,'Email');
+
+  const totalOut=sumF(w,'out'), totalRes=sumF(w,'res'), totalMt=sumF(w,'mt');
+  const avgRR=cap(avgF(li,'rr')), avgOR=avgF(em,'or'), avgDR=avgF(em,'dr');
+
+  // month-over-month trend for kpis
+  const outTrend=trendArrow(mo.map(m=>m.totalOut));
+  const resTrend=trendArrow(mo.map(m=>m.totalRes));
+  const rrTrend =trendArrow(mo.map(m=>m.liRR));
+
+  const kpis=`<div class="kpi-row">
+    ${kpiCard('Total Outreach',totalOut,'',color,'all channels',outTrend)}
+    ${kpiCard('LI Responses',sumF(li,'res'),'','#22d9a0',`${f(avgRR,'% avg rate')}`,resTrend)}
+    ${kpiCard('Meetings',totalMt,'','#f5a040')}
+    ${kpiCard('Avg Open Rate',avgOR,'%','#a07df5','email only')}
+    ${kpiCard('Avg Deliverability',avgDR,'%','#4a90f5','email only')}
+    ${kpiCard('Weeks Tracked',[...new Set(w.filter(r=>r.w).map(r=>r.w))].length,'','#3d5570')}
+  </div>`;
+
+  // weekly outreach bar
+  const weeks=[...new Set(w.filter(r=>r.w).map(r=>r.w))].sort();
+  const weekBarData=weeks.map(wk=>({
+    label:wk.slice(5),
+    vals:[
+      li.filter(r=>r.w===wk).reduce((s,r)=>s+(r.out||0),0),
+      em.filter(r=>r.w===wk).reduce((s,r)=>s+(r.out||0),0),
+    ]
+  }));
+
+  // monthly LI resp rate trend line
+  const liRRpts=mo.map(m=>({label:m.label,v:m.liRR}));
+  const emORpts=mo.map(m=>({label:m.label,v:m.emOR}));
+
+  // monthly outreach trend
+  const moOutData=mo.map(m=>({label:m.label,vals:[m.liOut,m.emOut]}));
+
+  // summary cards
+  const sumCards=S(recs).map(r=>`
+    <div class="mo-card">
+      <div class="mo-hdr">
+        <span class="mo-name">${r.title||r.mo}</span>
+        ${varPill(r.v)}
+      </div>
+      <div class="mo-stats">
+        <span class="mo-stat">Outreach <span>${(r.out||0).toLocaleString()}</span></span>
+        <span class="mo-stat">Resp <span style="color:#22d9a0">${r.res??'—'}</span></span>
+        ${r.rr!=null&&r.rr<=100?`<span class="mo-stat">Resp% <span style="color:#4a90f5">${r.rr.toFixed(1)}%</span></span>`:''}
+        <span class="mo-stat">Meetings <span style="color:#f5a040">${r.mt??'—'}</span></span>
+      </div>
+    </div>`).join('');
+
+  // monthly table
+  const moRows=mo.map((m,i)=>{
+    const prev=i>0?mo[i-1]:null;
+    const chg=prev&&prev.totalOut>0?(((m.totalOut-prev.totalOut)/prev.totalOut)*100).toFixed(0):null;
+    const badge=chg!=null?`<span style="color:${chg>=0?'#22d9a0':'#f55858'};font-size:8px"> ${chg>=0?'↑':'↓'}${Math.abs(chg)}%</span>`:'';
+    return `<tr>
+      <td style="color:#7a98b5;font-weight:600">${m.label}</td>
+      <td>${m.totalOut.toLocaleString()}${badge}</td>
+      <td style="color:#4a90f5">${m.liOut}</td>
+      <td style="color:#22d9a0">${m.emOut.toLocaleString()}</td>
+      <td style="color:#22d9a0">${m.totalRes}</td>
+      <td style="color:#4a90f5">${f(m.liRR,'%')}</td>
+      <td style="color:#a07df5">${f(m.emOR,'%')}</td>
+      <td style="color:#f5a040">${m.totalMt||'—'}</td>
+    </tr>`;
+  }).join('');
+
+  return `
+    ${kpis}
+    <div class="row">
+      <div class="panel col-2">
+        <div class="ph"><span class="pt">Weekly Outreach</span><span class="ps">LinkedIn + Email</span></div>
+        ${barChart(weekBarData,['#4a90f5','#22d9a0'],['LinkedIn','Email'])}
+      </div>
+      <div class="panel col-1">
+        <div class="ph"><span class="pt">Monthly Outreach Split</span></div>
+        ${barChart(moOutData,['#4a90f5','#22d9a0'],['LinkedIn','Email'])}
+      </div>
+    </div>
+    <div class="row">
+      <div class="panel col-1">
+        <div class="ph"><span class="pt">LinkedIn Response Rate Trend</span><span class="ps">monthly avg %</span></div>
+        ${svgLineChart([{label:'LI Resp Rate',color:color,pts:liRRpts}],400,90)}
+        <div class="legend" style="margin-top:8px"><div class="li"><div class="ld" style="background:${color}"></div>LI Resp Rate</div></div>
+      </div>
+      <div class="panel col-1">
+        <div class="ph"><span class="pt">Email Open Rate Trend</span><span class="ps">monthly avg %</span></div>
+        ${svgLineChart([{label:'Email Open Rate',color:'#22d9a0',pts:emORpts}],400,90)}
+        <div class="legend" style="margin-top:8px"><div class="li"><div class="ld" style="background:#22d9a0"></div>Email Open Rate</div></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="panel col-2">
+        <div class="ph"><span class="pt">Monthly Performance</span></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>Month</th><th>Total Out</th><th>LI</th><th>Email</th><th>Resp</th><th>LI Resp%</th><th>Em Open%</th><th>Meetings</th></tr></thead>
+          <tbody>${moRows}</tbody>
+        </table></div>
+      </div>
+      <div class="panel col-1">
+        <div class="ph"><span class="pt">Monthly Summaries</span></div>
+        <div class="mo-cards">${sumCards}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+//  COMBINED TAB
+// ═══════════════════════════════════════════════════════════════════════
+function buildCombined() {
+  const aw=W(bySub(RAW,'Amanda')), lw=W(bySub(RAW,'Luke')), all=[...aw,...lw];
+  const amMo=monthlyStats(RAW,'Amanda'), luMo=monthlyStats(RAW,'Luke');
+
+  const kpis=`<div class="kpi-row">
+    ${kpiCard('Combined Outreach',sumF(all,'out'),'','#4a90f5','Amanda + Luke')}
+    ${kpiCard('Combined Responses',sumF(all,'res'),'','#22d9a0')}
+    ${kpiCard('Combined Meetings',sumF(all,'mt'),'','#f5a040')}
+    ${kpiCard('Avg LI Resp Rate',cap(avgF(byCh(all,'LinkedIn'),'rr')),'%','#a07df5')}
+    ${kpiCard('Avg Email Open',avgF(byCh(all,'Email'),'or'),'%','#4a90f5')}
+    ${kpiCard('Avg Deliverability',avgF(byCh(all,'Email'),'dr'),'%','#22d9a0')}
+  </div>`;
+
+  const moBarData=MONTHS_ORDER.map((mo,i)=>({
+    label:MONTH_LABELS[mo],
+    vals:[amMo[i].totalOut, luMo[i].totalOut]
+  }));
+  const moResData=MONTHS_ORDER.map((mo,i)=>({
+    label:MONTH_LABELS[mo],
+    vals:[amMo[i].totalRes, luMo[i].totalRes]
+  }));
+
+  const h2hData=[
+    {label:'Total Outreach',a:sumF(aw,'out'),b:sumF(lw,'out')},
+    {label:'Responses',a:sumF(aw,'res'),b:sumF(lw,'res')},
+    {label:'Meetings',a:sumF(aw,'mt'),b:sumF(lw,'mt')},
+    {label:'LI Resp% avg',a:cap(avgF(byCh(aw,'LinkedIn'),'rr'))||0,b:cap(avgF(byCh(lw,'LinkedIn'),'rr'))||0},
+    {label:'Email Open% avg',a:avgF(byCh(aw,'Email'),'or')||0,b:avgF(byCh(lw,'Email'),'or')||0},
+  ];
+
+  const h2h=h2hData.map(({label,a,b})=>{
+    const tot=a+b||1;
+    const fa=typeof a==='number'?a.toFixed(a%1?1:0):a;
+    const fb=typeof b==='number'?b.toFixed(b%1?1:0):b;
+    return `<div class="h2h-item">
+      <div class="h2h-lbl">
+        <span style="color:#a07df5;font-weight:600">A: ${fa}</span>
+        <span style="color:#3d5570">${label}</span>
+        <span style="color:#f5a040;font-weight:600">L: ${fb}</span>
+      </div>
+      <div class="h2h-track">
+        <div style="flex:${a/tot};background:#a07df5"></div>
+        <div style="flex:${b/tot};background:#f5a040"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const sideCards=['Amanda','Luke'].map(sub=>{
+    const recs=bySub(W(RAW),sub);
+    const col=sub==='Amanda'?'#a07df5':'#f5a040';
+    const mo=monthlyStats(RAW,sub);
+    return `<div class="panel col-1">
+      <div class="ph"><span class="pt" style="color:${col}">${sub}</span><span class="ps">${recs.length} weekly records</span></div>
+      ${[
+        ['Total Outreach',sumF(recs,'out'),'',col],
+        ['LI Responses',sumF(byCh(recs,'LinkedIn'),'res'),'','#22d9a0'],
+        ['LI Resp Rate',cap(avgF(byCh(recs,'LinkedIn'),'rr')),'%','#4a90f5'],
+        ['Email Open%',avgF(byCh(recs,'Email'),'or'),'%','#a07df5'],
+        ['Meetings',sumF(recs,'mt'),'','#f5a040'],
+      ].map(([l,v,s,c])=>`<div class="sr"><span class="sr-l">${l}</span><span class="sr-v" style="color:${c}">${f(v)}${s}</span></div>`).join('')}
+      <div class="ph" style="margin-top:14px"><span class="pt">Monthly Outreach</span></div>
+      ${barChart(mo.map(m=>({label:m.label,vals:[m.totalOut]})),[col],[sub])}
+    </div>`;
+  }).join('');
+
+  const emORseries=[
+    {label:'Amanda',color:'#a07df5',pts:amMo.map(m=>({label:m.label,v:m.emOR}))},
+    {label:'Luke',  color:'#f5a040',pts:luMo.map(m=>({label:m.label,v:m.emOR}))},
+  ];
+
+  const liRRseries=[
+    {label:'Amanda',color:'#a07df5',pts:amMo.map(m=>({label:m.label,v:m.liRR}))},
+    {label:'Luke',  color:'#f5a040',pts:luMo.map(m=>({label:m.label,v:m.liRR}))},
+  ];
+
+  return `
+    ${kpis}
+    <div class="row">
+      <div class="panel col-2">
+        <div class="ph"><span class="pt">Monthly Outreach: Amanda vs Luke</span></div>
+        ${barChart(moBarData,['#a07df5','#f5a040'],['Amanda','Luke'])}
+      </div>
+      <div class="panel col-1">
+        <div class="ph"><span class="pt">Monthly Responses</span></div>
+        ${barChart(moResData,['#a07df5','#f5a040'],['Amanda','Luke'])}
+      </div>
+    </div>
+    <div class="row">
+      <div class="panel col-2">
+        <div class="ph"><span class="pt">Head-to-Head (all-time)</span></div>
+        ${h2h}
+      </div>
+      <div class="panel col-1">
+        <div class="ph"><span class="pt">LI Response Rate Trend</span></div>
+        ${svgLineChart(liRRseries,400,90)}
+        <div class="legend" style="margin-top:8px">
+          <div class="li"><div class="ld" style="background:#a07df5"></div>Amanda</div>
+          <div class="li"><div class="ld" style="background:#f5a040"></div>Luke</div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="panel col-1">
+        <div class="ph"><span class="pt">Email Open Rate Trend</span><span class="ps">monthly avg %</span></div>
+        ${svgLineChart(emORseries,400,90)}
+        <div class="legend" style="margin-top:8px">
+          <div class="li"><div class="ld" style="background:#a07df5"></div>Amanda</div>
+          <div class="li"><div class="ld" style="background:#f5a040"></div>Luke</div>
+        </div>
+      </div>
+      <div class="panel col-1">
+        <div class="ph"><span class="pt">LI Resp Rate vs Email Open Rate</span><span class="ps">Amanda · monthly avg %</span></div>
+        ${svgLineChart([
+          {label:'LI Resp Rate',color:'#a07df5',pts:amMo.map(m=>({label:m.label,v:m.liRR}))},
+          {label:'Email Open%', color:'#22d9a0',pts:amMo.map(m=>({label:m.label,v:m.emOR}))},
+        ],400,90)}
+        <div class="legend" style="margin-top:8px">
+          <div class="li"><div class="ld" style="background:#a07df5"></div>LI Resp Rate</div>
+          <div class="li"><div class="ld" style="background:#22d9a0"></div>Email Open%</div>
+        </div>
+        <div class="ph" style="margin-top:14px"><span class="ps">Luke · monthly avg %</span></div>
+        ${svgLineChart([
+          {label:'LI Resp Rate',color:'#f5a040',pts:luMo.map(m=>({label:m.label,v:m.liRR}))},
+          {label:'Email Open%', color:'#40d9f5',pts:luMo.map(m=>({label:m.label,v:m.emOR}))},
+        ],400,90)}
+        <div class="legend" style="margin-top:8px">
+          <div class="li"><div class="ld" style="background:#f5a040"></div>LI Resp Rate</div>
+          <div class="li"><div class="ld" style="background:#40d9f5"></div>Email Open%</div>
+        </div>
+      </div>
+    </div>>
+    <div class="row">${sideCards}</div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+//  TRENDS TAB
+// ═══════════════════════════════════════════════════════════════════════
+function buildTrends() {
+  const amMo=monthlyStats(RAW,'Amanda'), luMo=monthlyStats(RAW,'Luke');
+  const allMo=MONTHS_ORDER.map((mo,i)=>({
+    mo,label:MONTH_LABELS[mo],
+    totalOut:amMo[i].totalOut+luMo[i].totalOut,
+    totalRes:amMo[i].totalRes+luMo[i].totalRes,
+    liRR_am:amMo[i].liRR, liRR_lu:luMo[i].liRR,
+    emOR_am:amMo[i].emOR, emOR_lu:luMo[i].emOR,
+    emDR_am:amMo[i].emDR, emDR_lu:luMo[i].emDR,
+    emRR_am:amMo[i].emRR, emRR_lu:luMo[i].emRR,
+    emOut_am:amMo[i].emOut, emOut_lu:luMo[i].emOut,
+    emRes_am:amMo[i].emRes, emRes_lu:luMo[i].emRes,
+    emCl_am:amMo[i].emCl,  emCl_lu:luMo[i].emCl,
+    mt:amMo[i].totalMt+luMo[i].totalMt,
+  }));
+
+  const pts=m=>({label:m.label});
+
+  function trendPanel(title, sub, series) {
+    return `<div class="panel">
+      <div class="ph"><span class="pt">${title}</span><span class="ps">${sub}</span></div>
+      ${svgLineChart(series,700,110)}
+      <div class="legend" style="margin-top:8px">${series.map(s=>`<div class="li"><div class="ld" style="background:${s.color}"></div>${s.label}</div>`).join('')}</div>
+    </div>`;
+  }
+
+  // MoM change table
+  const momRows=MONTHS_ORDER.map((mo,i)=>{
+    if(i===0) return null;
+    const cur=allMo[i], prv=allMo[i-1];
+    const outChg=prv.totalOut>0?(((cur.totalOut-prv.totalOut)/prv.totalOut)*100).toFixed(0):null;
+    const resChg=prv.totalRes>0?(((cur.totalRes-prv.totalRes)/prv.totalRes)*100).toFixed(0):null;
+    const col=v=>v==null?'#3d5570':v>=0?'#22d9a0':'#f55858';
+    const arr=v=>v==null?'—':`${v>=0?'↑':'↓'}${Math.abs(v)}%`;
+    return `<tr>
+      <td style="color:#7a98b5">${MONTH_LABELS[mo]}</td>
+      <td>${cur.totalOut.toLocaleString()}</td>
+      <td style="color:${col(outChg)}">${arr(outChg)}</td>
+      <td style="color:#22d9a0">${cur.totalRes}</td>
+      <td style="color:${col(resChg)}">${arr(resChg)}</td>
+      <td style="color:#4a90f5">${f(cur.liRR_am,'%')} / ${f(cur.liRR_lu,'%')}</td>
+      <td style="color:#a07df5">${f(cur.emOR_am,'%')} / ${f(cur.emOR_lu,'%')}</td>
+      <td style="color:#f5a040">${cur.mt||'—'}</td>
+    </tr>`;
+  }).filter(Boolean).join('');
+
+  // build allMo liOut per sub
+  allMo.forEach((m,i)=>{ m.liOut_am=amMo[i].liOut; m.liOut_lu=luMo[i].liOut; m.emOut_am=amMo[i].emOut; m.emOut_lu=luMo[i].emOut; m.emRes_am=amMo[i].emRes; m.emRes_lu=luMo[i].emRes; m.emCl_am=amMo[i].emCl||0; m.emCl_lu=luMo[i].emCl||0; });
+
+  // email MoM table rows
+  const emailMomRows=MONTHS_ORDER.map((mo,i)=>{
+    if(i===0) return null;
+    const cur=allMo[i], prv=allMo[i-1];
+    const emTot=cur.emOut_am+cur.emOut_lu, emPrv=prv.emOut_am+prv.emOut_lu;
+    const chg=emPrv>0?(((emTot-emPrv)/emPrv)*100).toFixed(0):null;
+    const orChg_am=prv.emOR_am&&cur.emOR_am?(cur.emOR_am-prv.emOR_am).toFixed(1):null;
+    const col=v=>v==null?'#3d5570':parseFloat(v)>=0?'#22d9a0':'#f55858';
+    const arr=v=>v==null?'—':`${parseFloat(v)>=0?'↑':'↓'}${Math.abs(v)}%`;
+    const arrPt=v=>v==null?'—':`${parseFloat(v)>=0?'↑':'↓'}${Math.abs(v)}pp`;
+    return `<tr>
+      <td style="color:#7a98b5">${MONTH_LABELS[mo]}</td>
+      <td>${emTot.toLocaleString()}</td>
+      <td style="color:${col(chg)}">${arr(chg)}</td>
+      <td>${f(cur.emOR_am,'%')} / ${f(cur.emOR_lu,'%')}</td>
+      <td style="color:${col(orChg_am)}">${arrPt(orChg_am)}</td>
+      <td style="color:#22d9a0">${f(cur.emDR_am,'%')} / ${f(cur.emDR_lu,'%')}</td>
+      <td style="color:#4a90f5">${(cur.emRes_am+cur.emRes_lu)||'—'}</td>
+      <td style="color:#a07df5">${(cur.emCl_am+cur.emCl_lu)||'—'}</td>
+    </tr>`;
+  }).filter(Boolean).join('');
+
+  return `
+    <div class="slabel">📧 Email Performance Trends</div>
+    ${trendPanel('Email Outreach Volume','total sent per month · Amanda vs Luke',[
+      {label:'Amanda',color:'#a07df5',pts:allMo.map(m=>({label:m.label,v:m.emOut_am}))},
+      {label:'Luke',  color:'#f5a040',pts:allMo.map(m=>({label:m.label,v:m.emOut_lu}))},
+    ])}
+    ${trendPanel('Email Open Rate','monthly avg %',[
+      {label:'Amanda',color:'#a07df5',pts:allMo.map(m=>({label:m.label,v:m.emOR_am}))},
+      {label:'Luke',  color:'#f5a040',pts:allMo.map(m=>({label:m.label,v:m.emOR_lu}))},
+    ])}
+    ${trendPanel('LI Resp Rate vs Email Open Rate','Amanda: purple/green · Luke: orange/teal',[
+      {label:'A · LI Resp%', color:'#a07df5',pts:allMo.map(m=>({label:m.label,v:m.liRR_am}))},
+      {label:'A · Open%',    color:'#22d9a0',pts:allMo.map(m=>({label:m.label,v:m.emOR_am}))},
+      {label:'L · LI Resp%', color:'#f5a040',pts:allMo.map(m=>({label:m.label,v:m.liRR_lu}))},
+      {label:'L · Open%',    color:'#40d9f5',pts:allMo.map(m=>({label:m.label,v:m.emOR_lu}))},
+    ])}
+    ${trendPanel('Email Responses (count)','total per month',[
+      {label:'Amanda',color:'#a07df5',pts:allMo.map(m=>({label:m.label,v:m.emRes_am}))},
+      {label:'Luke',  color:'#f5a040',pts:allMo.map(m=>({label:m.label,v:m.emRes_lu}))},
+    ])}
+    ${trendPanel('Email Clicks (count)','total per month',[
+      {label:'Amanda',color:'#22d9a0',pts:allMo.map(m=>({label:m.label,v:m.emCl_am}))},
+      {label:'Luke',  color:'#40d9f5',pts:allMo.map(m=>({label:m.label,v:m.emCl_lu}))},
+    ])}
+    <div class="panel">
+      <div class="ph"><span class="pt">Email Month-over-Month Changes</span><span class="ps">Amanda / Luke split</span></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Month</th><th>Em Sent</th><th>MoM</th><th>Open% (A/L)</th><th>Open Δ</th><th>Deliv% (A/L)</th><th>Responses</th><th>Clicks</th></tr></thead>
+        <tbody>${emailMomRows}</tbody>
+      </table></div>
+    </div>
+
+    <div class="slabel" style="margin-top:8px">🔗 LinkedIn Performance Trends</div>
+    ${trendPanel('LI Response Rate','monthly avg % · capped at 100',[
+      {label:'Amanda',color:'#a07df5',pts:allMo.map(m=>({label:m.label,v:m.liRR_am}))},
+      {label:'Luke',  color:'#f5a040',pts:allMo.map(m=>({label:m.label,v:m.liRR_lu}))},
+    ])}
+    ${trendPanel('LI Responses (count)','total per month',[
+      {label:'Amanda',color:'#a07df5',pts:amMo.map(m=>({label:m.label,v:m.liRes}))},
+      {label:'Luke',  color:'#f5a040',pts:luMo.map(m=>({label:m.label,v:m.liRes}))},
+    ])}
+
+    <div class="slabel" style="margin-top:8px">⬡ Combined Overview Trends</div>
+    ${trendPanel('Total Outreach (All Channels)','both subclients combined',[
+      {label:'Total',color:'#4a90f5',pts:allMo.map(m=>({label:m.label,v:m.totalOut}))},
+    ])}
+    ${trendPanel('Total Meetings Sent','monthly total',[
+      {label:'Amanda',color:'#a07df5',pts:amMo.map(m=>({label:m.label,v:m.totalMt}))},
+      {label:'Luke',  color:'#f5a040',pts:luMo.map(m=>({label:m.label,v:m.totalMt}))},
+    ])}
+    ${trendPanel('Total Responses (All Channels)','monthly total',[
+      {label:'Amanda',color:'#a07df5',pts:amMo.map(m=>({label:m.label,v:m.totalRes}))},
+      {label:'Luke',  color:'#f5a040',pts:luMo.map(m=>({label:m.label,v:m.totalRes}))},
+    ])}
+    <div class="panel">
+      <div class="ph"><span class="pt">Month-over-Month Changes (All Channels)</span><span class="ps">vs previous month</span></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Month</th><th>Outreach</th><th>MoM</th><th>Responses</th><th>MoM</th><th>LI Resp% (A/L)</th><th>Meetings</th></tr></thead>
+        <tbody>${momRows}</tbody>
+      </table></div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+//  RECORDS TAB
+// ═══════════════════════════════════════════════════════════════════════
+function buildRecords() {
+  const all=[...RAW].filter(r=>r.t==='WEEKLY').sort((a,b)=>(a.w||'9999').localeCompare(b.w||'9999'));
+  const rows=all.map(r=>`<tr>
+    <td style="color:#4a7090;font-family:var(--ff-mono)">${r.w||'—'}</td>
+    <td style="color:${r.s==='Amanda'?'#a07df5':'#f5a040'}">${r.s}</td>
+    <td><span class="cdot" style="background:${r.c==='LinkedIn'?'#4a90f5':'#22d9a0'}"></span>${r.c}</td>
+    <td>${varPill(r.v)}</td>
+    <td style="font-weight:600">${r.out!=null?r.out.toLocaleString():'—'}</td>
+    <td style="color:#22d9a0">${r.res!=null?r.res:'—'}</td>
+    <td style="color:#4a90f5">${f(cap(r.rr),'%')}</td>
+    <td style="color:#a07df5">${f(r.or,'%')}</td>
+    <td style="color:#22d9a0">${f(r.dr,'%')}</td>
+    <td style="color:#f5a040">${r.mt!=null?r.mt:'—'}</td>
+  </tr>`).join('');
+
+  return `<div class="panel">
+    <div class="ph">
+      <span class="pt">All Weekly Records — ${all.length}</span>
+      <span class="ps">Sep 2025 – Feb 2026 · Weekly only</span>
+    </div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Week</th><th>Subclient</th><th>Channel</th><th>Variant</th><th>Outreach</th><th>Resp</th><th>LI Resp%</th><th>Open%</th><th>Deliv%</th><th>Meetings</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+//  ROUTER
+// ═══════════════════════════════════════════════════════════════════════
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  event.target.classList.add('active');
+  const pane=document.getElementById('pane-'+name);
+  pane.classList.add('active');
+  if(!pane.dataset.built){
+    const builders={overview:buildOverview,amanda:()=>buildSubclient('Amanda','#a07df5'),luke:()=>buildSubclient('Luke','#f5a040'),combined:buildCombined,trends:buildTrends,channels:buildChannels,records:buildRecords};
+    pane.innerHTML=builders[name]();
+    pane.dataset.built='1';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+//  CHANNELS TAB
+// ═══════════════════════════════════════════════════════════════════════
+function buildChannels() {
+  const w = W(RAW);
+  const li = byCh(w, 'LinkedIn'), em = byCh(w, 'Email');
+  const mo = monthlyStats(RAW); // all subclients
+
+  // KPIs
+  const liTotalOut = sumF(li,'out'), emTotalOut = sumF(em,'out');
+  const liRes = sumF(li,'res'), emRes = sumF(em,'res');
+  const liRR  = cap(avgF(li,'rr')), emOR = avgF(em,'or');
+  const liMt  = sumF(li,'mt'),  emMt  = sumF(em,'mt');
+  const emDR  = avgF(em,'dr');
+
+  const kpis = `<div class="kpi-row">
+    ${kpiCard('LI Outreach',  liTotalOut,'','#4a90f5', `${((liTotalOut/(liTotalOut+emTotalOut))*100).toFixed(0)}% of total`)}
+    ${kpiCard('LI Responses', liRes,     '','#a07df5', `${f(liRR,'% avg resp rate')}`)}
+    ${kpiCard('LI Meetings',  liMt,      '','#f5a040')}
+    ${kpiCard('Email Outreach',emTotalOut,'','#22d9a0',`${((emTotalOut/(liTotalOut+emTotalOut))*100).toFixed(0)}% of total`)}
+    ${kpiCard('Email Responses',emRes,   '','#4a90f5', `Email only`)}
+    ${kpiCard('Email Open Rate',emOR,    '%','#22d9a0',`${f(emDR,'% deliverability')}`)}
+  </div>`;
+
+  // Monthly bar: LI vs Email outreach
+  const moLi = monthlyStats(RAW,'Amanda').map((m,i)=>({
+    label: m.label,
+    liA: m.liOut, emA: m.emOut,
+    liL: monthlyStats(RAW,'Luke')[i].liOut,
+    emL: monthlyStats(RAW,'Luke')[i].emOut,
+  }));
+  const moBarLI  = moLi.map(m=>({label:m.label, vals:[m.liA+m.liL]}));
+  const moBarEM  = moLi.map(m=>({label:m.label, vals:[m.emA+m.emL]}));
+  const moBarBoth= moLi.map(m=>({label:m.label, vals:[m.liA+m.liL, m.emA+m.emL]}));
+
+  // Trend series
+  const amMo = monthlyStats(RAW,'Amanda'), luMo = monthlyStats(RAW,'Luke');
+  const liRRpts = amMo.map((m,i)=>({
+    label:m.label,
+    liRR_a: m.liRR, liRR_l: luMo[i].liRR,
+    emOR_a: m.emOR, emOR_l: luMo[i].emOR,
+  }));
+
+  // Monthly channel table
+  const tableRows = moLi.map((m,i)=>{
+    const liTot=m.liA+m.liL, emTot=m.emA+m.emL, total=liTot+emTot;
+    const liPct=total?(liTot/total*100).toFixed(0):'—';
+    const emPct=total?(emTot/total*100).toFixed(0):'—';
+    const amMoD=amMo[i], luMoD=luMo[i];
+    return `<tr>
+      <td style="color:#7a98b5;font-weight:600">${m.label}</td>
+      <td style="color:#4a90f5;font-weight:600">${liTot.toLocaleString()}</td>
+      <td style="color:#4a90f5">${liPct}%</td>
+      <td style="color:#4a90f5">${f(cap((amMoD.liRR+luMoD.liRR)/2),'%')}</td>
+      <td style="color:#22d9a0;font-weight:600">${emTot.toLocaleString()}</td>
+      <td style="color:#22d9a0">${emPct}%</td>
+      <td style="color:#22d9a0">${f((amMoD.emOR!=null&&luMoD.emOR!=null)?((amMoD.emOR+luMoD.emOR)/2):amMoD.emOR??luMoD.emOR,'%')}</td>
+      <td style="color:#a07df5">${f((amMoD.emDR!=null&&luMoD.emDR!=null)?((amMoD.emDR+luMoD.emDR)/2):amMoD.emDR??luMoD.emDR,'%')}</td>
+    </tr>`;
+  }).join('');
+
+  // Split donut-style bar (LI vs Email share per month)
+  const splitBars = moLi.map(m=>{
+    const liT=m.liA+m.liL, emT=m.emA+m.emL, tot=liT+emT||1;
+    const liPx=Math.max(2,(liT/tot*100)).toFixed(1);
+    const emPx=Math.max(2,(emT/tot*100)).toFixed(1);
+    return `<div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-family:var(--ff-mono);font-size:9px;margin-bottom:4px">
+        <span style="color:#4a90f5">🔗 ${liT.toLocaleString()} (${(liT/tot*100).toFixed(0)}%)</span>
+        <span style="color:#7a98b5">${m.label}</span>
+        <span style="color:#22d9a0">📧 ${emT.toLocaleString()} (${(emT/tot*100).toFixed(0)}%)</span>
+      </div>
+      <div style="display:flex;height:8px;border-radius:4px;overflow:hidden">
+        <div style="width:${liPx}%;background:#4a90f5"></div>
+        <div style="width:${emPx}%;background:#22d9a0"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `
+    ${kpis}
+    <div class="row">
+      <div class="panel col-2">
+        <div class="ph"><span class="pt">LinkedIn vs Email — Monthly Outreach</span><span class="ps">all subclients combined</span></div>
+        ${barChart(moBarBoth, ['#4a90f5','#22d9a0'], ['LinkedIn','Email'])}
+      </div>
+      <div class="panel col-1">
+        <div class="ph"><span class="pt">Channel Split by Month</span><span class="ps">share of total outreach</span></div>
+        ${splitBars}
+        <div class="legend" style="margin-top:8px">
+          <div class="li"><div class="ld" style="background:#4a90f5"></div>LinkedIn</div>
+          <div class="li"><div class="ld" style="background:#22d9a0"></div>Email</div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><span class="pt">LI Response Rate vs Email Open Rate</span><span class="ps">monthly avg · all subclients combined</span></div>
+      ${svgLineChart([
+        {label:'LI Resp Rate', color:'#4a90f5', pts:amMo.map((m,i)=>({label:m.label,v:cap(avgF([{rr:m.liRR},{rr:luMo[i].liRR}].filter(x=>x.rr!=null),'rr'))}))},
+        {label:'Email Open%',  color:'#22d9a0', pts:amMo.map((m,i)=>({label:m.label,v:avgF([{or:m.emOR},{or:luMo[i].emOR}].filter(x=>x.or!=null),'or')}))},
+      ],700,120)}
+      <div class="legend" style="margin-top:8px">
+        <div class="li"><div class="ld" style="background:#4a90f5"></div>LI Response Rate</div>
+        <div class="li"><div class="ld" style="background:#22d9a0"></div>Email Open Rate</div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><span class="pt">Monthly Channel Breakdown</span><span class="ps">LinkedIn + Email · combined subclients</span></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr>
+          <th>Month</th>
+          <th style="color:#4a90f5">LI Outreach</th><th style="color:#4a90f5">LI Share</th><th style="color:#4a90f5">LI Resp%</th>
+          <th style="color:#22d9a0">Em Outreach</th><th style="color:#22d9a0">Em Share</th><th style="color:#22d9a0">Em Open%</th><th style="color:#22d9a0">Em Deliv%</th>
+        </tr></thead>
+        <tbody>${tableRows}</tbody>
+      </table></div>
+    </div>
+  `;
+}
+
+
+document.getElementById('pane-overview').innerHTML=buildOverview();
+document.getElementById('pane-overview').dataset.built='1';
+</script>
+</body>
+</html>
