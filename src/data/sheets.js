@@ -1,0 +1,40 @@
+export const sheetsData = {
+  kpis: [
+    { label: 'Calls Made',      value: '1,479', change: '+8.3%',  up: true  },
+    { label: 'Pick-up Rate',    value: '34.2%', change: '+2.1pp', up: true  },
+    { label: 'Meetings Booked', value: '89',    change: '+12.7%', up: true  },
+    { label: 'Info Requests',   value: '156',   change: '-3.2%',  up: false },
+  ],
+  chartTitle: 'Weekly Call Activity',
+  chartXKey: 'week',
+  chartData: [
+    { week: 'Jan 6',  calls: 142 },
+    { week: 'Jan 13', calls: 168 },
+    { week: 'Jan 20', calls: 155 },
+    { week: 'Jan 27', calls: 189 },
+    { week: 'Feb 3',  calls: 201 },
+    { week: 'Feb 10', calls: 178 },
+    { week: 'Feb 17', calls: 214 },
+    { week: 'Feb 24', calls: 232 },
+  ],
+  chartLines: [
+    { key: 'calls', color: '#6366f1', label: 'Calls Made' },
+  ],
+  tableColumns: [
+    { key: 'week',         label: 'Week'          },
+    { key: 'calls',        label: 'Calls Made'    },
+    { key: 'pickupRate',   label: 'Pick-up Rate'  },
+    { key: 'meetings',     label: 'Meetings'      },
+    { key: 'infoRequests', label: 'Info Requests' },
+  ],
+  tableRows: [
+    { week: 'Jan 6',  calls: 142, pickupRate: '31.0%', meetings: 8,  infoRequests: 18 },
+    { week: 'Jan 13', calls: 168, pickupRate: '33.5%', meetings: 11, infoRequests: 22 },
+    { week: 'Jan 20', calls: 155, pickupRate: '32.2%', meetings: 9,  infoRequests: 19 },
+    { week: 'Jan 27', calls: 189, pickupRate: '35.4%', meetings: 14, infoRequests: 25 },
+    { week: 'Feb 3',  calls: 201, pickupRate: '36.8%', meetings: 16, infoRequests: 28 },
+    { week: 'Feb 10', calls: 178, pickupRate: '34.3%', meetings: 13, infoRequests: 24 },
+    { week: 'Feb 17', calls: 214, pickupRate: '37.4%', meetings: 18, infoRequests: 20 },
+    { week: 'Feb 24', calls: 232, pickupRate: '38.1%', meetings: 21, infoRequests: 27 },
+  ],
+}

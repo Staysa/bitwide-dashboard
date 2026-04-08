@@ -1,0 +1,40 @@
+export const chatData = {
+  kpis: [
+    { label: 'Conversations',     value: '342',    change: '+18.4%', up: true  },
+    { label: 'Qualified Leads',   value: '71',     change: '+22.1%', up: true  },
+    { label: 'Conversion Rate',   value: '20.8%',  change: '+0.7pp', up: true  },
+    { label: 'Avg Response Time', value: '1m 42s', change: '-23s',   up: false, positive: true },
+  ],
+  chartTitle: 'Conversations Over Time',
+  chartXKey: 'week',
+  chartData: [
+    { week: 'Jan 6',  conversations: 28, qualified: 6  },
+    { week: 'Jan 13', conversations: 34, qualified: 8  },
+    { week: 'Jan 20', conversations: 31, qualified: 7  },
+    { week: 'Jan 27', conversations: 42, qualified: 9  },
+    { week: 'Feb 3',  conversations: 51, qualified: 11 },
+    { week: 'Feb 10', conversations: 62, qualified: 13 },
+    { week: 'Feb 17', conversations: 68, qualified: 14 },
+    { week: 'Feb 24', conversations: 72, qualified: 18 },
+  ],
+  chartLines: [
+    { key: 'conversations', color: '#6366f1', label: 'Conversations'   },
+    { key: 'qualified',     color: '#10b981', label: 'Qualified Leads'  },
+  ],
+  tableColumns: [
+    { key: 'contact',      label: 'Contact'       },
+    { key: 'company',      label: 'Company'       },
+    { key: 'status',       label: 'Status'        },
+    { key: 'responseTime', label: 'Response Time' },
+    { key: 'date',         label: 'Date'          },
+  ],
+  tableRows: [
+    { contact: 'Sarah Chen',   company: 'Growthbase', status: 'Qualified',   responseTime: '0m 48s', date: 'Feb 24' },
+    { contact: 'Mark Torres',  company: 'Salesloop',  status: 'Qualified',   responseTime: '1m 12s', date: 'Feb 24' },
+    { contact: 'Julia Bauer',  company: 'Clarix',     status: 'In Progress', responseTime: '2m 05s', date: 'Feb 23' },
+    { contact: 'Liam Park',    company: 'Vetrix',     status: 'Qualified',   responseTime: '0m 55s', date: 'Feb 23' },
+    { contact: 'Nina Harmon',  company: 'Propelr',    status: 'Not a Fit',   responseTime: '3m 22s', date: 'Feb 22' },
+    { contact: 'Owen Bradley', company: 'CloudHive',  status: 'Qualified',   responseTime: '1m 30s', date: 'Feb 22' },
+    { contact: 'Priya Sharma', company: 'Taskly',     status: 'In Progress', responseTime: '1m 58s', date: 'Feb 21' },
+  ],
+}

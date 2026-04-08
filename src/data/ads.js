@@ -1,0 +1,40 @@
+export const adsData = {
+  kpis: [
+    { label: 'Total Spend',       value: '$13,480', change: '+4.2%',  up: true,  positive: null },
+    { label: 'Clicks',            value: '5,240',   change: '+18.3%', up: true  },
+    { label: 'Avg CPC',           value: '$2.57',   change: '-11.7%', up: false, positive: true },
+    { label: 'Conversions',       value: '248',     change: '+21.4%', up: true  },
+    { label: 'Cost / Conversion', value: '$54.35',  change: '-14.2%', up: false, positive: true },
+  ],
+  chartTitle: 'Weekly Ad Performance',
+  chartXKey: 'week',
+  chartData: [
+    { week: 'Jan 6',  clicks: 480 },
+    { week: 'Jan 13', clicks: 560 },
+    { week: 'Jan 20', clicks: 520 },
+    { week: 'Jan 27', clicks: 680 },
+    { week: 'Feb 3',  clicks: 740 },
+    { week: 'Feb 10', clicks: 800 },
+    { week: 'Feb 17', clicks: 820 },
+    { week: 'Feb 24', clicks: 810 },
+  ],
+  chartLines: [
+    { key: 'clicks', color: '#6366f1', label: 'Clicks' },
+  ],
+  tableColumns: [
+    { key: 'campaign',    label: 'Campaign'    },
+    { key: 'spend',       label: 'Spend'       },
+    { key: 'clicks',      label: 'Clicks'      },
+    { key: 'cpc',         label: 'CPC'         },
+    { key: 'conversions', label: 'Conversions' },
+    { key: 'costPerConv', label: 'Cost / Conv' },
+  ],
+  tableRows: [
+    { campaign: 'Brand — Search',      spend: '$3,840', clicks: '1,420', cpc: '$2.70', conversions: 72, costPerConv: '$53.33' },
+    { campaign: 'Competitor — Search', spend: '$2,680', clicks: '980',   cpc: '$2.73', conversions: 48, costPerConv: '$55.83' },
+    { campaign: 'Demo — RLSA',         spend: '$2,240', clicks: '840',   cpc: '$2.67', conversions: 62, costPerConv: '$36.13' },
+    { campaign: 'Outbound — Search',   spend: '$1,980', clicks: '780',   cpc: '$2.54', conversions: 38, costPerConv: '$52.11' },
+    { campaign: 'LinkedIn — Display',  spend: '$1,540', clicks: '620',   cpc: '$2.48', conversions: 18, costPerConv: '$85.56' },
+    { campaign: 'Retargeting — All',   spend: '$1,200', clicks: '600',   cpc: '$2.00', conversions: 28, costPerConv: '$42.86' },
+  ],
+}

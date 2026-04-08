@@ -1,22 +1,8 @@
 import { useState } from 'react'
-import SheetsTab from './tabs/SheetsTab'
-import GoogleAnalyticsTab from './tabs/GoogleAnalyticsTab'
-import HotjarTab from './tabs/HotjarTab'
-import ChatTab from './tabs/ChatTab'
-import SEOTab from './tabs/SEOTab'
-import GoogleAdsTab from './tabs/GoogleAdsTab'
-
-const TABS = [
-  { id: 'sheets',    label: 'Sheets',           Component: SheetsTab          },
-  { id: 'analytics', label: 'Google Analytics',  Component: GoogleAnalyticsTab },
-  { id: 'hotjar',    label: 'Hotjar',            Component: HotjarTab          },
-  { id: 'chat',      label: 'Chat',              Component: ChatTab            },
-  { id: 'seo',       label: 'SEO',               Component: SEOTab             },
-  { id: 'ads',       label: 'Google Ads',        Component: GoogleAdsTab       },
-]
+import { TABS } from './config/tabs'
 
 export default function App() {
-  const [active, setActive] = useState('sheets')
+  const [active, setActive] = useState(TABS[0].id)
   const { Component: ActiveTab } = TABS.find(t => t.id === active)
 
   return (
